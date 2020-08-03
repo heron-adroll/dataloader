@@ -19,16 +19,17 @@ func DataLoaderMiddleware() gin.HandlerFunc {
 		c.Set(loadersKey, &Loaders{
 			Reference: ReferenceLoader{
 				maxBatch: 100,
-				wait:     1 * time.Millisecond,
+				wait:     1000 * time.Millisecond,
 				fetch: func(domains []string) ([]*Reference, []error) {
-					idIdentifier := "100"
-					if domains[0] == "test2" {
-						idIdentifier = "200"
-					}
+
 					references := []*Reference{}
-					references = append(references, &Reference{
-						ID: idIdentifier,
-					})
+					for _, domain := range domains {
+						references = append(references, &Reference{
+							ID: domain,
+						})
+					}
+
+					fmt.Println(domains)
 					return references, nil
 				},
 			},

@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/heron.rossi/dataloader/graph/generated"
 	"github.com/heron.rossi/dataloader/graph/model"
@@ -15,6 +16,7 @@ func (r *accountResolver) Reference(ctx context.Context, obj *model.Account) (*m
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("Domain", obj.Domain)
 	return model.For(ginContext).Reference.Load(obj.Domain)
 }
 
@@ -22,6 +24,12 @@ func (r *queryResolver) Accounts(ctx context.Context, domain *string) ([]*model.
 	accounts := []*model.Account{}
 	accounts = append(accounts, &model.Account{
 		Domain: *domain,
+	})
+	accounts = append(accounts, &model.Account{
+		Domain: "test2",
+	})
+	accounts = append(accounts, &model.Account{
+		Domain: "test 333",
 	})
 
 	return accounts, nil
