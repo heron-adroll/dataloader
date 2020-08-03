@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/heron.rossi/dataloader/graph/generated"
 	"github.com/heron.rossi/dataloader/graph/model"
@@ -13,8 +12,9 @@ import (
 
 func (r *accountResolver) Reference(ctx context.Context, obj *model.Account) (*model.Reference, error) {
 	ginContext, err := model.GinContextFromContext(ctx)
-	fmt.Println(err)
-	fmt.Println(ginContext)
+	if err != nil {
+		return nil, err
+	}
 	return model.For(ginContext).Reference.Load(obj.Domain)
 }
 
