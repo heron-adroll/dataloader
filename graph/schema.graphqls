@@ -1,0 +1,16 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type Account {
+  domain: String
+  reference: Reference!
+}
+
+type Reference {
+  ID: String!
+}
+
+type Query {
+  accounts(domain: String): [Account]
+}
