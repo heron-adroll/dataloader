@@ -9,9 +9,9 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/gin-gonic/gin"
+	"github.com/heron.rossi/dataloader/dataloaders"
 	"github.com/heron.rossi/dataloader/graph"
 	"github.com/heron.rossi/dataloader/graph/generated"
-	"github.com/heron.rossi/dataloader/graph/model"
 )
 
 const defaultPort = "8080"
@@ -32,7 +32,7 @@ func main() {
 
 	r := gin.New()
 	r.Use(GinContextToContextMiddleware())
-	r.Use(model.DataLoaderMiddleware())
+	r.Use(dataloaders.DataLoaderMiddleware())
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 

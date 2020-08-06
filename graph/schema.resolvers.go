@@ -5,19 +5,22 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/graph-gophers/dataloader"
+	"github.com/heron.rossi/dataloader/dataloaders"
 	"github.com/heron.rossi/dataloader/graph/generated"
 	"github.com/heron.rossi/dataloader/graph/model"
 )
 
 func (r *accountResolver) Reference(ctx context.Context, obj *model.Account) (*model.Reference, error) {
-	ginContext, err := model.GinContextFromContext(ctx)
+	ginContext, err := dataloaders.GinContextFromContext(ctx)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("Domain", obj.Domain)
-	return model.For(ginContext).Reference.Load(obj.Domain)
+	loader, _ := ginContext.Get(dataloaders.LoadersKey)
+	thunk := loader.(*dataloaders.Loaders).References.Load(context.TODO(), dataloader.StringKey(obj.Domain))
+	data, _ := thunk()
+	return data.(*model.Reference), nil
 }
 
 func (r *queryResolver) Accounts(ctx context.Context, domain *string) ([]*model.Account, error) {
@@ -25,13 +28,13 @@ func (r *queryResolver) Accounts(ctx context.Context, domain *string) ([]*model.
 	accounts = append(accounts, &model.Account{
 		Domain: *domain,
 	})
+	// this is just to simulate various objects being retrieved
 	accounts = append(accounts, &model.Account{
 		Domain: "test2",
 	})
 	accounts = append(accounts, &model.Account{
 		Domain: "test 333",
 	})
-
 	return accounts, nil
 }
 
